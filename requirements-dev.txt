@@ -1,0 +1,4 @@
+# ===== Dev dependencies =====
+-r requirements.txt
+pytest>=8.2.0
+ruff>=0.6.0
