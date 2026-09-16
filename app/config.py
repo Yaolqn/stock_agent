@@ -45,6 +45,7 @@ class Settings(BaseSettings):
 
     # ---------------- 记忆 ----------------
     max_history_messages: int = 20   # 单会话最多保留的消息条数（超出裁剪最旧消息）
+    memory_db_path: str = ""         # 记忆持久化 SQLite 文件路径；留空 = 纯内存（重启即失）
 
     # ---------------- 会话 ----------------
     session_id: str = "default"      # 当前会话 ID，用于隔离不同会话的记忆

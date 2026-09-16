@@ -32,3 +32,8 @@ testdl/
 testdl2/
 testdl3/
 test.md
+
+# ---- 运行时产物 ----
+# 记忆持久化 SQLite 数据库（MEMORY_DB_PATH 生成，重启可重建）
+chat_history.db
+*.db

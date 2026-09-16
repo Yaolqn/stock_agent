@@ -8,7 +8,10 @@
   投资决策官（build_decision）—— 综合各方给出最终投资评价
   风险管理官（build_risk）    —— 风险审查 + 一票否决
 
-它们与总控协调官一样，都通过数据工程师（data_engineer 工具层）拿数据。
+数据获取方式：专家直接绑定 app/tools/stock.py 中的数据工具
+（scan_market / analyze_stock_deep / get_stock_quote / get_stock_news /
+get_stock_fund_flow）。原先独立的 data_engineer 工具层已移除，
+数据能力内聚在 app.tools.stock，避免重复实现与层次冗余。
 
 此外提供 build_expert_tools()：把五位专家组装为 supervisor 可调度的工具，
 供总控协调官（Supervisor）并行调度使用。

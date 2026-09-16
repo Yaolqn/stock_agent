@@ -90,6 +90,11 @@ def _check_akshare() -> None:
 
 
 def main() -> None:
+    """stock_agent 终端入口：总控协调官 + /report 投研流水线双模式。
+
+    流程：加载配置 → 校验依赖 → 组装专家工具与总控 → 进入交互循环。
+    普通输入走总控灵活问答（流式），/report 走完整投研流水线。
+    """
     settings = get_settings()
     _ensure_utf8_stdio()
 

@@ -19,7 +19,9 @@ _TOOL_MODULES = (weather, stock)
 
 def get_available_tools() -> list[BaseTool]:
     """返回当前全部可用工具（供链组装时绑定给模型）。"""
+    # 创建一个空列表，用于存储所有工具
     tools: list[BaseTool] = []
     for module in _TOOL_MODULES:
+        # 调用每个工具模块的 get_tools 方法，获取其工具列表
         tools.extend(module.get_tools())
     return tools

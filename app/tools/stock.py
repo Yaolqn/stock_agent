@@ -58,7 +58,7 @@ def _fresh_spot() -> object:
 _AM_START, _AM_END = time(9, 30), time(11, 30)
 _PM_START, _PM_END = time(13, 0), time(15, 0)
 
-
+# @lru_cache(maxsize=1) 意思是缓存结果，只调用一次，后续调用直接返回缓存结果
 @lru_cache(maxsize=1)
 def _trade_dates() -> set[str]:
     """新浪交易日历：返回所有 A 股交易日（YYYY-MM-DD）的字符串集合。"""
@@ -246,6 +246,7 @@ def analyze_stock_deep(symbol: str) -> str:
     latest = close.iloc[-1]
 
     def fmt(v: float, suffix: str = "") -> str:
+        """格式化数值：NaN 显示为占位符「—」，正常值保留两位小数。"""
         return f"{v:.2f}{suffix}" if v == v else "—"
 
     return (

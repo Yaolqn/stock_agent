@@ -99,6 +99,14 @@ class StockResearchPipeline:
 
     # ---- 图定义：节点挂到共享状态，边决定依赖 ----
     def _build_graph(self) -> StateGraph:
+        """构建并编译投研流水线状态图（DAG）。
+
+        节点：screener → (analyst ∥ intel) → decision → risk → END，
+        其中 analyst 与 intel 都依赖 screener，二者可并行。
+
+        Returns:
+            编译后的 StateGraph（真正驱动流水线的本体）。
+        """
         graph = StateGraph(ResearchState)
         # 添加节点：选股师、分析师、情报官、决策官、风控官
         # graph.add_node(节点名， 节点函数)
@@ -121,6 +129,15 @@ class StockResearchPipeline:
 
     # ---- 单阶段：让某个专家基于给定任务作答 ----
     def _run(self, name: str, task: str) -> str:
+        """让指定专家基于一段任务描述作答，返回其回复文本。
+
+        Args:
+            name: 专家节点名（screener / analyst / intel / decision / risk）。
+            task: 交给该专家的任务描述。
+
+        Returns:
+            专家回复的文本内容（BaseMessage 取 content，否则转字符串）。
+        """
         # 从专家节点字典中获取对应专家
         expert = self._experts[name]
         print(f"\n  ▶ [专家·{name}] 收到任务，开始执行…（独立会话 pipeline_{name}）")

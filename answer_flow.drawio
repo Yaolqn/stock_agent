@@ -1,0 +1,118 @@
+<mxfile host="65bd71144e">
+    <diagram id="answer-flow" name="一个问题如何被回答">
+        <mxGraphModel dx="890" dy="710" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1300" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="lane1" value="① 用户" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#F2F2F2;strokeColor=#CCCCCC;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="1160" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="A" value="😀 用户提出问题&lt;br&gt;例如：「分析北方稀土 600111 的走势」或「北京今天天气？」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DFF0D8;strokeColor=#82B366;fontColor=#000000;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="72" width="580" height="62" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane2" value="② 入口（main_langgraph.py / stock_agent/main.py）" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#F2F2F2;strokeColor=#CCCCCC;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="170" width="1160" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="B" value="入口分发 &amp; 提问引导&lt;br&gt;· /report → 投研流水线&lt;br&gt;· 普通提问 → 总控协调官（多 agent）/ 单 agent" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D9EAD3;strokeColor=#82B366;fontColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="206" width="880" height="64" as="geometry"/>
+                </mxCell>
+                <mxCell id="note2" value="单 agent 路径：模型直接 bind 数据工具，同样 Send 并行执行 + 失败重试 + 记忆压缩" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FFF3B0;strokeColor=#CCA300;fontColor=#000000;fontSize=10;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="1080" y="200" width="110" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane3" value="③ 总控协调官 Supervisor（只调度决策，不碰数据）" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#EAF2FA;strokeColor=#B7C4D1;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="310" width="1160" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="C1" value="总控大脑 绑定「专家工具」&lt;br&gt;bind_tools(&#13;&#10;scan / analyze / intel /&#13;&#10;decision / risk)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CFE2F3;strokeColor=#3C78D8;fontColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="346" width="390" height="86" as="geometry"/>
+                </mxCell>
+                <mxCell id="C2" value="路由：识别诉求类型&lt;br&gt;描述性 → 只派对应专家&lt;br&gt;决策类 → 再加 decision + risk" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#CCA300;fontColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="346" width="330" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="C3" value="共享消息流汇聚：综合各专家结论 → 总控汇总出最终回答" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CFE2F3;strokeColor=#3C78D8;fontColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="500" width="740" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="note3" value="/report → 流水线&lt;br&gt;screener→(analyst+intel)→decision→risk&lt;br&gt;按共享 ResearchState 字段传递" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FFF3B0;strokeColor=#CCA300;fontColor=#000000;fontSize=10;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="400" width="130" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane4" value="④ 专家 Agent（各自独立记忆，上下文不污染）" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#FBF6EC;strokeColor=#DDD0B0;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="610" width="1160" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="D1" value="智能选股师 scan&lt;br&gt;扫描全市场&lt;br&gt;(scan_market)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="648" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="D2" value="多维分析师 analyze&lt;br&gt;深度分析单股&lt;br&gt;(analyze_stock_deep)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="330" y="648" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="D3" value="市场情报官 intel&lt;br&gt;消息面 / 舆情&lt;br&gt;(get_stock_news)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="648" width="220" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="D4" value="投资/风险官&lt;br&gt;decision · risk&lt;br&gt;(资金流+技术复核，一票否决)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#000000;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="648" width="300" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="D5" value="每个专家内部 = LangGraphAgent 循环：大脑(提案) ⇄ 动作(执行工具) ⇄ 看结果再决策（多轮反思，Send 并行）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E6;strokeColor=#D6B656;fontColor=#000000;fontSize=11;strokeWidth=1;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="788" width="1050" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane5" value="⑤ 数据工程师（akshare 新浪源工具层，为所有 Agent 供数）" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#F7EEF7;strokeColor=#D0BBD0;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="960" width="1160" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="E1" value="实时行情 / 历史K线 / 全市场扫描 / 资金流 / 新闻&lt;br&gt;+ 休盘与数据时效提示（非交易日 / 盘中 / 收盘）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4CCCC;strokeColor=#B85450;fontColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="992" width="920" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="lane6" value="⑥ 记忆 &amp; 输出" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#F2F2F2;strokeColor=#CCCCCC;fontStyle=1;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="1100" width="1160" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="F1" value="记忆：总控与各专家独立会话隔离&lt;br&gt;+ 长对话自动压缩（摘要）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D3EA;strokeColor=#9673A6;fontColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="1128" width="430" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="F2" value="② 流式输出最终回答&lt;br&gt;只显示模型说话，不吐专家原始结果" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6D3EA;strokeColor=#9673A6;fontColor=#000000;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="1128" width="400" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="eAB" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="A" target="B" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eBC1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.3;exitY=1;entryX=0.5;entryY=0;" parent="1" source="B" target="C1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC1C2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" parent="1" source="C1" target="C2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC2D1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" parent="1" source="C2" target="D1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC2D2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="C2" target="D2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC2D3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.75;exitY=1;entryX=0.5;entryY=0;" parent="1" source="C2" target="D3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC2D4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.9;exitY=1;entryX=0.5;entryY=0;" parent="1" source="C2" target="D4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eD1E1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;entryX=0.2;entryY=0;dashed=1;" parent="1" source="D1" target="E1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eD2E1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;entryX=0.4;entryY=0;dashed=1;" parent="1" source="D2" target="E1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eD3E1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;entryX=0.6;entryY=0;dashed=1;" parent="1" source="D3" target="E1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eD4E1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;exitX=0.5;exitY=1;entryX=0.8;entryY=0;dashed=1;" parent="1" source="D4" target="E1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eE1D5" value="数据回流 → 循环反思" style="edgeStyle=orthogonalEdgeStyle;rounded=1;dashed=1;fontColor=#000000;fontSize=10;" parent="1" source="E1" target="D5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC3" value="专家结论 → 总控汇聚" style="edgeStyle=orthogonalEdgeStyle;rounded=1;fontColor=#000000;fontSize=10;" parent="1" source="D5" target="C3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eC3F1" style="edgeStyle=orthogonalEdgeStyle;rounded=1" parent="1" source="C3" target="F1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="eF1F2" style="edgeStyle=orthogonalEdgeStyle;rounded=1" parent="1" source="F1" target="F2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

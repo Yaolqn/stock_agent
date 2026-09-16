@@ -25,7 +25,7 @@ from app.tools import get_available_tools
 
 
 def _ensure_utf8_stdio() -> None:
-    """确保 Windows 终端能正确显示中文（与 main_langgraph.py 保持一致）。"""
+    """确保 Windows 终端能正确显示中文。"""
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     except (AttributeError, ValueError):
@@ -33,7 +33,7 @@ def _ensure_utf8_stdio() -> None:
 
 
 def _build_graph():
-    """按与 main_langgraph.py 相同的条件组装 agent，返回其编译后的状态图。
+    """按与终端入口（app/cli.py）相同的条件组装 agent，返回其编译后的状态图。
 
     图的结构与是否启用工具无关（call_model ⇄ action 的骨架始终存在），
     这里保持与入口一致的装配方式，便于后续更新时可视化结果与真实一致。

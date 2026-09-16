@@ -1,6 +1,7 @@
 """LangGraph 版 Agent：图定义、节点实现与对外接口（Agent 包核心）。
 
-与 app/chain.py 的手写 Agent 循环相比，本模块用 LangGraph 的状态机
+与原先 app/chain.py 的手写 Agent 循环（LCEL + RunnableWithMessageHistory，
+已随 LangChain 1.x 移除）相比，本模块用 LangGraph 的状态机
 方式声明「大脑 → 手脚 → 回到大脑」的编排，图结构一目了然，且天然
 支持：递归上限、中途断点、按节点流式、checkpointer 持久化等能力。
 
@@ -87,6 +88,15 @@ class LangGraphAgent:
     # ---------------- 图定义 ----------------
 
     def _build_graph(self) -> StateGraph:
+        """构建并编译 Agent 的状态图（大脑 call_model ⇄ 手脚 action 循环）。
+
+        图结构：
+          START → call_model ──(条件路由)→ END / Send 扇出 action
+                                    action 执行完自动合并回 call_model
+
+        Returns:
+            编译后的 StateGraph（真正驱动对话的本体）。
+        """
         # 定义状态图，状态为 AgentState 类型
         graph = StateGraph(AgentState)
         # 添加节点：call_model, action
@@ -167,10 +177,13 @@ class LangGraphAgent:
         # 取出会话历史
         history = self._memory.get_session_history(session_id)
         # 初始消息 = 系统提示词 + 会话历史 + 本轮输入
+        # SystemMessage 是固定字段，不是AgentState固定字段，所以要手动添加
+        # 聊天消息三基类：HumanMessage用户输入, AIMessage模型回复, SystemMessage系统提示词
         messages = [SystemMessage(content=self._system_prompt)]
         # 合并会话历史
         messages.extend(history.messages)
         # 追加本轮输入
+        # append作为整体添加，避免被模型误认为是多个消息
         messages.append(HumanMessage(content=user_input))
 
         # 图推理：根据当前全部消息，让模型作答/提名工具
@@ -260,7 +273,7 @@ def build_lg_agent(
     Returns:
         编译好的 LangGraphAgent。
     """
-    # 创建模型实例（同 chain.py 中的 create_llm）
+    # 创建模型实例（create_llm 定义于 app/models.py，各入口共用）
     llm = create_llm(settings)
     if tools:
         # 给模型绑定工具清单；不支持工具调用的模型（如 fake）自动回退

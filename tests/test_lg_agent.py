@@ -1,7 +1,8 @@
 """LangGraph 版 Agent 的离线测试（不调用任何真实模型、不访问网络）。
 
-与 tests/test_chain.py 对应，验证同一套能力（工具执行、记忆写回、
-会话隔离）在 LangGraph 状态机实现下依然成立。
+验证 LangGraph 状态机实现下的核心能力：多轮对话记忆写回、会话隔离、
+工具执行（模型点名的工具被真实调用、最终回复来自工具结果）、
+fake 模型不支持工具绑定时回退为纯对话。
 """
 
 from __future__ import annotations
@@ -19,7 +20,7 @@ from app.tools import get_available_tools
 
 def _make_agent(max_history: int = 6) -> LangGraphAgent:
     """构造一个使用假模型的 LangGraph Agent（离线可用）。"""
-    settings = Settings(llm_provider="fake", max_history_messages=max_history)
+    settings = Settings(llm_provider="fake", max_history_messages=max_history, memory_db_path="")
     fake_llm = GenericFakeChatModel(
         messages=cycle(AIMessage(content=f"回复{i}") for i in range(100))
     )
@@ -67,7 +68,7 @@ def test_lg_agent_executes_weather_tool(monkeypatch):
         "app.tools.weather._fetch_weather",
         lambda city: {"city": "北京", "weather": "晴", "temperature": 28},
     )
-    settings = Settings(llm_provider="fake", max_history_messages=6)
+    settings = Settings(llm_provider="fake", max_history_messages=6, memory_db_path="")
     # 第一轮返回「要求调用工具」，第二轮（拿到工具结果后）返回最终回复
     fake_llm = GenericFakeChatModel(
         messages=iter(
@@ -100,7 +101,7 @@ def test_lg_agent_executes_weather_tool(monkeypatch):
 
 def test_build_lg_agent_falls_back_for_fake_model():
     """fake 模型不支持工具绑定时应回退为普通对话，行为不变。"""
-    settings = Settings(llm_provider="fake", max_history_messages=6)
+    settings = Settings(llm_provider="fake", max_history_messages=6, memory_db_path="")
     memory = MemoryManager(settings)
     agent = build_lg_agent(settings, memory, tools=get_available_tools())
 

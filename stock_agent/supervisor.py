@@ -71,6 +71,14 @@ def wrap_expert_as_tool(name: str, description: str, expert: LangGraphAgent) -> 
     expert_id = f"expert_{name}"
 
     def _run(task: str) -> str:
+        """专家工具的执行体：把任务转交专家 agent，回传其结论文本。
+
+        Args:
+            task: 交给专家的任务描述（supervisor 大脑生成）。
+
+        Returns:
+            专家回复的文本（BaseMessage 取 content，否则转字符串）。
+        """
         print(f"\n  ▶ [专家·{name}] 收到任务，开始执行…（独立会话 {expert_id}）")
         reply = expert.ask(task, expert_id)  # 独立会话，避免与 supervisor 主会话串史
         print(f"  ✔ [专家·{name}] 执行完成。")
